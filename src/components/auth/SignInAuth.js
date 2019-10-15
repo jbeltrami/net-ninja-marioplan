@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { signIn } from '../../store/actions/authActions';
 
-export default class SignInAuth extends Component {
+class SignInAuth extends Component {
   state = {
     email: '',
     password: '',
@@ -15,11 +18,14 @@ export default class SignInAuth extends Component {
   };
 
   handleSubmit = e => {
+    const { onSignIn } = this.props;
     e.preventDefault();
-    console.log(this.state);
+    onSignIn(this.state);
   };
 
   render() {
+    const { authError } = this.props;
+
     return (
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
@@ -36,9 +42,28 @@ export default class SignInAuth extends Component {
             <button type="submit" className="btn pink lighten-1 z-depth-0">
               Login
             </button>
+            <div className="red-text center">
+              {authError ? <p>{authError}</p> : null}
+            </div>
           </div>
         </form>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({ authError: state.auth.authError });
+
+const mapDispatchToProps = dispatch => ({
+  onSignIn: creds => dispatch(signIn(creds)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignInAuth);
+
+SignInAuth.propTypes = {
+  onSignIn: PropTypes.func,
+  authError: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+};
