@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 // components
 import ProjectSummary from './ProjectSummary';
 
@@ -7,7 +8,9 @@ const ProjectList = ({ projects }) => {
   const buildProjects = items => {
     if (items)
       return items.map(project => (
-        <ProjectSummary project={project} key={project.id} />
+        <Link to={`/project/${project.id}`} key={project.id}>
+          <ProjectSummary project={project} />
+        </Link>
       ));
   };
 
