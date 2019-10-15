@@ -5,7 +5,7 @@ import ProjectSummary from './ProjectSummary';
 
 const ProjectList = ({ projects }) => {
   const buildProjects = items => {
-    if (items.length || items)
+    if (items)
       return items.map(project => (
         <ProjectSummary project={project} key={project.id} />
       ));
