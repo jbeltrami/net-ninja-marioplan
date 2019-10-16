@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { signUp } from '../../store/actions/authActions';
 
 class SignUpAuth extends Component {
   state = {
@@ -20,12 +21,14 @@ class SignUpAuth extends Component {
   };
 
   handleSubmit = e => {
+    const { handleSignUp } = this.props;
     e.preventDefault();
     console.log(this.state);
+    handleSignUp(this.state);
   };
 
   renderComponent = () => {
-    const { auth } = this.props;
+    const { auth, authError } = this.props;
     if (auth.uid) return <Redirect to="/" />;
 
     return (
@@ -52,6 +55,9 @@ class SignUpAuth extends Component {
             <button type="submit" className="btn pink lighten-1 z-depth-0">
               Sign Up
             </button>
+            <div className="red-text center">
+              {authError ? <p>{authError}</p> : null}
+            </div>
           </div>
         </form>
       </div>
@@ -63,11 +69,24 @@ class SignUpAuth extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  auth: state.firebase.auth,
+const mapDispatchToProps = dispatch => ({
+  handleSignUp: user => {
+    dispatch(signUp(user));
+  },
 });
 
-export default connect(mapStateToProps)(SignUpAuth);
+const mapStateToProps = state => ({
+  auth: state.firebase.auth,
+  authError: state.auth.authError,
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUpAuth);
+
 SignUpAuth.propTypes = {
   auth: PropTypes.object,
+  handleSignUp: PropTypes.func,
+  authError: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
 };
