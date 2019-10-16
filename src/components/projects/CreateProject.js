@@ -19,9 +19,10 @@ class CreateProject extends Component {
   };
 
   handleSubmit = e => {
-    const { createProjectAction } = this.props;
+    const { createProjectAction, history } = this.props;
     e.preventDefault();
     createProjectAction(this.state);
+    history.push('/');
   };
 
   render() {
@@ -73,4 +74,5 @@ export default connect(
 CreateProject.propTypes = {
   createProjectAction: PropTypes.func,
   auth: PropTypes.object,
+  history: PropTypes.object,
 };
