@@ -7,11 +7,11 @@ import SignedInLinks from './SignedInLinks';
 import SignedOutLinks from './SignedOutLinks';
 
 const Navbar = props => {
-  const { auth } = props;
+  const { auth, profile } = props;
 
   const renderLinks = () => {
     if (!auth.uid) return <SignedOutLinks />;
-    return <SignedInLinks />;
+    return <SignedInLinks profile={profile} />;
   };
 
   return (
@@ -26,10 +26,14 @@ const Navbar = props => {
   );
 };
 
-const mapStateToProps = state => ({ auth: state.firebase.auth });
+const mapStateToProps = state => {
+  console.log(state);
+  return { auth: state.firebase.auth, profile: state.firebase.profile };
+};
 
 export default connect(mapStateToProps)(Navbar);
 
 Navbar.propTypes = {
   auth: PropTypes.object,
+  profile: PropTypes.object,
 };

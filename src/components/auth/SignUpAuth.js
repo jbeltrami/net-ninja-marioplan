@@ -23,7 +23,6 @@ class SignUpAuth extends Component {
   handleSubmit = e => {
     const { handleSignUp } = this.props;
     e.preventDefault();
-    console.log(this.state);
     handleSignUp(this.state);
   };
 
