@@ -7,23 +7,30 @@ import SignedInLinks from './SignedInLinks';
 import SignedOutLinks from './SignedOutLinks';
 
 const Navbar = props => {
-  const { isEmpty } = props;
+  const { auth } = props;
+
+  const renderLinks = () => {
+    if (!auth.isLoaded) return;
+    if (!auth.uid) return <SignedOutLinks />;
+    return <SignedInLinks />;
+  };
+
   return (
     <nav className="nav-wrapper grey darken-3">
       <div className="container">
         <Link to="/" className="brand-logo">
           MarioPlan
         </Link>
-        {isEmpty ? <SignedOutLinks /> : <SignedInLinks />}
+        {renderLinks()}
       </div>
     </nav>
   );
 };
 
-const mapStateToProps = state => state.firebase.auth;
+const mapStateToProps = state => ({ auth: state.firebase.auth });
 
 export default connect(mapStateToProps)(Navbar);
 
 Navbar.propTypes = {
-  isEmpty: PropTypes.bool,
+  auth: PropTypes.object,
 };
