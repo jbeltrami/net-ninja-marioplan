@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { signIn } from '../../store/actions/authActions';
 
 class SignInAuth extends Component {
@@ -24,7 +25,8 @@ class SignInAuth extends Component {
   };
 
   render() {
-    const { authError } = this.props;
+    const { authError, auth } = this.props;
+    if (auth.uid) return <Redirect to="/" />;
 
     return (
       <div className="container">
@@ -52,7 +54,10 @@ class SignInAuth extends Component {
   }
 }
 
-const mapStateToProps = state => ({ authError: state.auth.authError });
+const mapStateToProps = state => ({
+  authError: state.auth.authError,
+  auth: state.firebase.auth,
+});
 
 const mapDispatchToProps = dispatch => ({
   onSignIn: creds => dispatch(signIn(creds)),
@@ -66,4 +71,5 @@ export default connect(
 SignInAuth.propTypes = {
   onSignIn: PropTypes.func,
   authError: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  auth: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

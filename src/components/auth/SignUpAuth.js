@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-export default class SignUpAuth extends Component {
+class SignUpAuth extends Component {
   state = {
     firstName: '',
     lastName: '',
@@ -21,7 +24,10 @@ export default class SignUpAuth extends Component {
     console.log(this.state);
   };
 
-  render() {
+  renderComponent = () => {
+    const { auth } = this.props;
+    if (auth.uid) return <Redirect to="/" />;
+
     return (
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
@@ -50,5 +56,18 @@ export default class SignUpAuth extends Component {
         </form>
       </div>
     );
+  };
+
+  render() {
+    return this.renderComponent();
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.firebase.auth,
+});
+
+export default connect(mapStateToProps)(SignUpAuth);
+SignUpAuth.propTypes = {
+  auth: PropTypes.object,
+};

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
+import { Redirect } from 'react-router-dom';
 import Notifications from './Notifications';
 import ProjectList from '../projects/ProjectList';
 
@@ -10,7 +11,9 @@ class Dashboard extends Component {
   componentDidMount() {}
 
   render() {
-    const { projects } = this.props;
+    const { projects, auth } = this.props;
+    // redirect goes here:
+    if (!auth.uid) return <Redirect to="/signin" />;
 
     return (
       <div className="dashboard container">
@@ -29,6 +32,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => ({
   projects: state.firestore.ordered.projects,
+  auth: state.firebase.auth,
 });
 
 export default compose(
@@ -38,4 +42,5 @@ export default compose(
 
 Dashboard.propTypes = {
   projects: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  auth: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };

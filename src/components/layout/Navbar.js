@@ -10,7 +10,6 @@ const Navbar = props => {
   const { auth } = props;
 
   const renderLinks = () => {
-    if (!auth.isLoaded) return;
     if (!auth.uid) return <SignedOutLinks />;
     return <SignedInLinks />;
   };
