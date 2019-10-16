@@ -11,7 +11,7 @@ class Dashboard extends Component {
   componentDidMount() {}
 
   render() {
-    const { projects, auth } = this.props;
+    const { projects, auth, notifications } = this.props;
     // redirect goes here:
     if (!auth.uid) return <Redirect to="/signin" />;
 
@@ -22,7 +22,7 @@ class Dashboard extends Component {
             <ProjectList projects={projects} />
           </div>
           <div className="col s12 m5 offset-m1">
-            <Notifications />
+            <Notifications notifications={notifications} />
           </div>
         </div>
       </div>
@@ -32,15 +32,20 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => ({
   projects: state.firestore.ordered.projects,
+  notifications: state.firestore.ordered.notifications,
   auth: state.firebase.auth,
 });
 
 export default compose(
-  firestoreConnect(() => ['projects']),
+  firestoreConnect(() => [
+    { collection: 'projects', orderBy: ['createdAt', 'desc'] },
+    { collection: 'notifications', limit: 3, orderBy: ['time', 'desc'] },
+  ]),
   connect(mapStateToProps)
 )(Dashboard);
 
 Dashboard.propTypes = {
   projects: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  notifications: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   auth: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
