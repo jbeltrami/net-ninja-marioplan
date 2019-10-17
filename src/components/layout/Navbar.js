@@ -26,11 +26,9 @@ const Navbar = props => {
   );
 };
 
-const mapStateToProps = state => {
-  console.log(state);
-  return { auth: state.firebase.auth, profile: state.firebase.profile };
-};
-
+const mapStateToProps = state =>
+  // console.log(state);
+  ({ auth: state.firebase.auth, profile: state.firebase.profile });
 export default connect(mapStateToProps)(Navbar);
 
 Navbar.propTypes = {

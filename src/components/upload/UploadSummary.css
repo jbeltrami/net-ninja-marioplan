@@ -1,0 +1,7 @@
+.card-action>.top-right-corner {
+  top: 16px;
+}
+
+.upload-list .card-title {
+  background-color: rgba(0, 0, 0, 0.75)
+}

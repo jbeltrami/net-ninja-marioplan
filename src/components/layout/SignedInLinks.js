@@ -13,7 +13,7 @@ const SignedInLinks = props => {
         <NavLink to="/create">New Project</NavLink>
       </li>
       <li>
-        <NavLink to="/upload">Upload</NavLink>
+        <NavLink to="/uploads">Uploads</NavLink>
       </li>
       <li>
         <a

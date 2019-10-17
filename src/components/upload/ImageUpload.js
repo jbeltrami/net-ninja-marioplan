@@ -7,14 +7,6 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { createUpload } from '../../store/actions/uploadActions';
 
 class ImageUpload extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      image: null,
-      url: '',
-    };
-  }
-
   handleChange = e => {
     if (e.target.files[0]) {
       const image = e.target.files[0];
@@ -30,34 +22,38 @@ class ImageUpload extends Component {
   };
 
   render() {
-    const style = {
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-    };
-
-    const { url } = this.state;
     const { auth, uploads } = this.props;
 
     if (!auth.uid) return <Redirect to="/" />;
 
-    if (uploads && uploads.length >= 1) console.log('uploads', uploads);
     return (
-      <div style={style}>
-        <br />
-        <input type="file" onChange={this.handleChange} />
-        <button type="button" onClick={this.onUpload}>
-          Upload
-        </button>
-        <br />
-        <img
-          src={url || 'http://via.placeholder.com/400x300'}
-          alt="Uploaded images"
-          height="300"
-          width="400"
-        />
+      <div className="container upload-form white">
+        <div className="row">
+          <div className="col s6">
+            <div className="input-field">
+              <input type="file" onChange={this.handleChange} />
+            </div>
+            <div className="input-field">
+              <button
+                className="btn waves-effect waves-light"
+                type="button"
+                onClick={this.onUpload}
+              >
+                Upload
+                <i className="material-icons right">send</i>
+              </button>
+            </div>
+          </div>
+
+          <div className="col s6">
+            <img
+              src={uploads.recentUpload || 'http://via.placeholder.com/400x300'}
+              alt="Uploaded images"
+              height="300"
+              width="400"
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -65,7 +61,7 @@ class ImageUpload extends Component {
 
 const mapStateToProps = state => ({
   auth: state.firebase.auth,
-  uploads: state.firestore.ordered.files,
+  uploads: state.uploads,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -90,9 +86,5 @@ export default compose(
 ImageUpload.propTypes = {
   handleUpload: PropTypes.func,
   auth: PropTypes.object,
-  uploads: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.object,
-    PropTypes.bool,
-  ]),
+  uploads: PropTypes.object,
 };

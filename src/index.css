@@ -37,3 +37,11 @@ input[type=email]:not(.browser-default):focus:not([readonly])+label,
 input[type=password]:not(.browser-default):focus:not([readonly])+label {
   color: #ec407a !important;
 }
+
+.nav-wrapper {
+  margin-bottom: 60px;
+}
+
+.upload-form {
+  padding: 20px;
+}

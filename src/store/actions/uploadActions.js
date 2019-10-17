@@ -13,14 +13,14 @@ export const createUpload = file => async (dispatch, getState, getFirebase) => {
     await firebase
       .firestore()
       .collection('files')
-      .doc(file.name.replace(' ', '-'))
-      .set({
+      .add({
         ownerId: loggedInUser,
         urlPath: fileUrl,
         fileName: file.name,
+        createdAt: new Date(),
       });
 
-    await dispatch({ type: 'CREATE_UPLOAD' });
+    await dispatch({ type: 'CREATE_UPLOAD', payload: fileUrl });
   } catch (error) {
     await dispatch({ type: 'CREATE_UPLOAD_ERROR', payload: error });
   }
