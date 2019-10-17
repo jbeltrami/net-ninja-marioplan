@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { storage } from '../../config/fbConfig';
+import { createUpload } from '../../store/actions/uploadActions';
 
 class ImageUpload extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class ImageUpload extends Component {
       image: null,
       url: '',
       progress: 0,
+      message: '',
     };
   }
 
@@ -20,33 +22,11 @@ class ImageUpload extends Component {
     }
   };
 
-  handleUpload = () => {
+  onUpload = async () => {
     const { image } = this.state;
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    uploadTask.on(
-      'state_changed',
-      snapshot => {
-        // progrss function ....
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        this.setState({ progress });
-      },
-      error => {
-        // error function ....
-        console.log(error);
-      },
-      () => {
-        // complete function ....
-        storage
-          .ref('images')
-          .child(image.name)
-          .getDownloadURL()
-          .then(url => {
-            this.setState({ url });
-          });
-      }
-    );
+    const { handleUpload } = this.props;
+
+    handleUpload(image);
   };
 
   render() {
@@ -58,14 +38,14 @@ class ImageUpload extends Component {
       justifyContent: 'center',
     };
 
-    const { progress, url } = this.state;
+    const { progress, url, message } = this.state;
 
     return (
       <div style={style}>
         <progress value={progress} max="100" />
         <br />
         <input type="file" onChange={this.handleChange} />
-        <button type="button" onClick={this.handleUpload}>
+        <button type="button" onClick={this.onUpload}>
           Upload
         </button>
         <br />
@@ -75,15 +55,24 @@ class ImageUpload extends Component {
           height="300"
           width="400"
         />
+
+        {message ? <p>{message}</p> : null}
       </div>
     );
   }
 }
 
-// const mapStateToProps = state => ({ fbStorage: state.storage });
-export default ImageUpload;
-// export default connect(mapStateToProps)(ImageUpload);
+const mapDispatchToProps = dispatch => ({
+  handleUpload: file => {
+    dispatch(createUpload(file));
+  },
+});
 
-// ImageUpload.propTypes = {
-//   fbStorage: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-// };
+export default connect(
+  null,
+  mapDispatchToProps
+)(ImageUpload);
+
+ImageUpload.propTypes = {
+  handleUpload: PropTypes.func,
+};
