@@ -10,7 +10,27 @@ import { deleteProject } from '../../store/actions/projectActions';
 
 function ProjectDetails(props) {
   const { project, auth, handleDeleteProject, history } = props;
-  console.log(props);
+
+  const renderDelete = () => {
+    if (project.authorId === auth.uid)
+      return (
+        <i
+          className="material-icons top-right-corner"
+          onClick={() => {
+            handleDeleteProject(project);
+            history.push('/');
+          }}
+          onKeyPress={() => {
+            handleDeleteProject(project);
+            history.push('/');
+          }}
+          role="button"
+          tabIndex={0}
+        >
+          delete_forever
+        </i>
+      );
+  };
 
   if (!auth.uid) return <Redirect to="/" />;
   if (Object.keys(project).length > 1) {
@@ -18,22 +38,7 @@ function ProjectDetails(props) {
       <div className="container project-details">
         <div className="card z-depth-0">
           <div className="card-content">
-            <i
-              className="material-icons top-right-corner"
-              onClick={() => {
-                handleDeleteProject(project);
-                history.push('/');
-              }}
-              onKeyPress={() => {
-                handleDeleteProject(project);
-                history.push('/');
-              }}
-              role="button"
-              tabIndex={0}
-            >
-              delete_forever
-            </i>
-
+            {renderDelete()}
             <span className="card-title">{project.title}</span>
             <p>{project.content}</p>
           </div>
