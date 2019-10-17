@@ -9,6 +9,7 @@ import ProjectDetails from './components/projects/ProjectDetails';
 import CreateProject from './components/projects/CreateProject';
 import SignInAuth from './components/auth/SignInAuth';
 import SignUpAuth from './components/auth/SignUpAuth';
+import ImageUpload from './components/upload/ImageUpload';
 
 function App(props) {
   const { auth } = props;
@@ -23,6 +24,7 @@ function App(props) {
             <Route path="/signin" component={SignInAuth} />
             <Route path="/signup" component={SignUpAuth} />
             <Route path="/create" component={CreateProject} />
+            <Route path="/upload" component={ImageUpload} />
           </Switch>
         </div>
       </BrowserRouter>

@@ -13,6 +13,9 @@ const SignedInLinks = props => {
         <NavLink to="/create">New Project</NavLink>
       </li>
       <li>
+        <NavLink to="/upload">Upload</NavLink>
+      </li>
+      <li>
         <a
           role="button"
           tabIndex={0}
