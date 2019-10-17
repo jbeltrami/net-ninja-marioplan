@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
   project: projectReducer,
   firestore: firestoreReducer,
   firebase: firebaseReducer,
-  upload: uploadReducer,
+  uploads: uploadReducer,
 });
 
 export default rootReducer;

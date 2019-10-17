@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { storage } from '../../config/fbConfig';
+import { firestoreConnect } from 'react-redux-firebase';
 import { createUpload } from '../../store/actions/uploadActions';
 
 class ImageUpload extends Component {
@@ -10,8 +12,6 @@ class ImageUpload extends Component {
     this.state = {
       image: null,
       url: '',
-      progress: 0,
-      message: '',
     };
   }
 
@@ -38,11 +38,14 @@ class ImageUpload extends Component {
       justifyContent: 'center',
     };
 
-    const { progress, url, message } = this.state;
+    const { url } = this.state;
+    const { auth, uploads } = this.props;
 
+    if (!auth.uid) return <Redirect to="/" />;
+
+    if (uploads && uploads.length >= 1) console.log('uploads', uploads);
     return (
       <div style={style}>
-        <progress value={progress} max="100" />
         <br />
         <input type="file" onChange={this.handleChange} />
         <button type="button" onClick={this.onUpload}>
@@ -55,12 +58,15 @@ class ImageUpload extends Component {
           height="300"
           width="400"
         />
-
-        {message ? <p>{message}</p> : null}
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.firebase.auth,
+  uploads: state.firestore.ordered.files,
+});
 
 const mapDispatchToProps = dispatch => ({
   handleUpload: file => {
@@ -68,11 +74,25 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  firestoreConnect(props => [
+    {
+      collection: 'files',
+      where: [['ownerId', '==', props.auth.uid || '']],
+    },
+  ])
 )(ImageUpload);
 
 ImageUpload.propTypes = {
   handleUpload: PropTypes.func,
+  auth: PropTypes.object,
+  uploads: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+    PropTypes.bool,
+  ]),
 };
